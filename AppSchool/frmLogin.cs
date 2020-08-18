@@ -7,9 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DataAccess;
 using DevExpress.XtraEditors;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using SchoolEntity;
 
 namespace AppSchool
 {
@@ -27,6 +29,12 @@ namespace AppSchool
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            var student = new GenericRepository<Student>();
+            student.Add(new Student()
+            {
+                
+            });
+
             
         }
     }

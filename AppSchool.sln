@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30320.27
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppSchool", "AppSchool\AppSchool.csproj", "{273851F3-747E-466E-B36C-46D5EBB0A75D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolDataAccess", "DataAccess\SchoolDataAccess.csproj", "{9C80957C-0B2F-44A7-824E-C1A8F476C5B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolEntity", "SchoolEntity\SchoolEntity.csproj", "{71D80EB2-7DA3-4B06-BBD7-56C6F3FB7DBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{273851F3-747E-466E-B36C-46D5EBB0A75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{273851F3-747E-466E-B36C-46D5EBB0A75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{273851F3-747E-466E-B36C-46D5EBB0A75D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C80957C-0B2F-44A7-824E-C1A8F476C5B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C80957C-0B2F-44A7-824E-C1A8F476C5B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C80957C-0B2F-44A7-824E-C1A8F476C5B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C80957C-0B2F-44A7-824E-C1A8F476C5B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71D80EB2-7DA3-4B06-BBD7-56C6F3FB7DBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71D80EB2-7DA3-4B06-BBD7-56C6F3FB7DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71D80EB2-7DA3-4B06-BBD7-56C6F3FB7DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71D80EB2-7DA3-4B06-BBD7-56C6F3FB7DBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

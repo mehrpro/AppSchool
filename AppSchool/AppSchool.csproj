@@ -8,10 +8,11 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>AppSchool</RootNamespace>
     <AssemblyName>AppSchool</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -40,7 +41,10 @@
     <Reference Include="DevExpress.Utils.v18.2, Version=18.2.10.0, Culture=neutral, PublicKeyToken=aafb20a8e8c4d2cc" />
     <Reference Include="DevExpress.XtraBars.v18.2" />
     <Reference Include="DevExpress.XtraEditors.v18.2, Version=18.2.10.0, Culture=neutral, PublicKeyToken=aafb20a8e8c4d2cc" />
-    <Reference Include="MySql.Data, Version=8.0.21.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="MySql.Data, Version=6.10.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -146,6 +150,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\showdetail.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataAccess\SchoolDataAccess.csproj">
+      <Project>{9c80957c-0b2f-44a7-824e-c1a8f476c5b1}</Project>
+      <Name>SchoolDataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SchoolEntity\SchoolEntity.csproj">
+      <Project>{71d80eb2-7da3-4b06-bbd7-56c6f3fb7dbd}</Project>
+      <Name>SchoolEntity</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
