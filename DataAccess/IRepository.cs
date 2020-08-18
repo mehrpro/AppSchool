@@ -1,4 +1,4 @@
-﻿namespace DataAccess
+﻿namespace SchoolDataAccess
 {
     public interface IRepository<TEntity>
     

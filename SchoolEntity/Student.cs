@@ -1,9 +1,13 @@
 ﻿using System;
+using SchoolDataAccess;
 
 namespace SchoolEntity
 {
+    [Table("dbo","Student")]
     public class Student
     {
+        [PrimeryKey]
+        [ComputedColumn]
         public int ID { get; set; }
         public string Name { get; set; }
         public string Family { get; set; }

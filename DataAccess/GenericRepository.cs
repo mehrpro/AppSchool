@@ -1,4 +1,4 @@
-﻿namespace DataAccess
+﻿namespace SchoolDataAccess
 {
     public class GenericRepository<TEntity>:IRepository<TEntity>
     {
