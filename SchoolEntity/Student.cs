@@ -1,13 +1,13 @@
 ﻿using System;
-using SchoolDataAccess;
+
 
 namespace SchoolEntity
 {
-    [Table("appschool","Student")]
+    [SchoolDataAccess.Table("appschool","Student")]
     public class Student
     {
-        [PrimeryKey]
-        [ComputedColumn]
+        [SchoolDataAccess.PrimeryKey]
+        [SchoolDataAccess.ComputedColumn]
         public int ID { get; set; }
         public string Name { get; set; }
         public string Family { get; set; }

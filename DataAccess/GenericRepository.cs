@@ -7,7 +7,7 @@ using MySql.Data.MySqlClient;
 
 namespace SchoolDataAccess
 {
-    public class GenericRepository<TEntity>:IRepository<TEntity>
+    public class GenericRepository<TEntity> : IRepository<TEntity>
     {
         private string schema;
         private string tableName;
@@ -36,8 +36,8 @@ namespace SchoolDataAccess
                 {
                     PropertyName = propertyInfo.Name,
                     ColumnName = propertyInfo.Name,
-                    IsComputed = propertyInfo.GetCustomAttributes(typeof(ComputedColumnAttribute),false).Any(),
-                    IsPrimeryKey = propertyInfo.GetCustomAttributes(typeof(PrimeryKeyAttribute),false).Any(),
+                    IsComputed = propertyInfo.GetCustomAttributes(typeof(ComputedColumnAttribute), false).Any(),
+                    IsPrimeryKey = propertyInfo.GetCustomAttributes(typeof(PrimeryKeyAttribute), false).Any(),
                     Propertyinfo = propertyInfo
 
                 });
@@ -45,14 +45,15 @@ namespace SchoolDataAccess
 
         }
 
-        public GenericRepository(string _connectionString):this()
+        public GenericRepository(string _connectionString) : this()
         {
             connectionString = _connectionString;
         }
 
         public int Add(TEntity entity)
         {
-            StringBuilder insertStatment = new StringBuilder("INSERT INTO " + schema + "." + tableName + " ({columns}) VALUES ({values})");
+            StringBuilder insertStatment =
+                new StringBuilder("INSERT INTO " + schema + "." + tableName + " ({columns}) VALUES ({values})");
             List<string> columnName = new List<string>();
             List<MySqlParameter> sqlParameters = new List<MySqlParameter>();
             List<string> sqlParameterName = new List<string>();
@@ -65,10 +66,10 @@ namespace SchoolDataAccess
                 var parameterName = "Column" + parameterCounter++;
                 sqlParameterName.Add(parameterName);
                 var parameterValue = property.Propertyinfo.GetValue(entity);
-                sqlParameters.Add(new MySqlParameter(parameterName,parameterValue));
+                sqlParameters.Add(new MySqlParameter(parameterName, parameterValue));
             }
 
-            insertStatment.Replace("{columns}",string.Join(",",columnName.Select(col=> col)));
+            insertStatment.Replace("{columns}", string.Join(",", columnName.Select(col => col)));
             insertStatment.Replace("{values}", string.Join(",", sqlParameters.Select(para => "@" + para)));
             using (var connection = new MySqlConnection(connectionString))
             {
@@ -86,12 +87,131 @@ namespace SchoolDataAccess
 
         public int Remove(TEntity entity)
         {
-            return 0;
+            var primeryKey = _propertyModels.Where(property => property.IsPrimeryKey);
+
+
+            StringBuilder deleteStatment = new StringBuilder("Delete FROM " + schema + "." + tableName);
+            List<string> wherePart = new List<string>();
+            List<MySqlParameter> sqlParameters = new List<MySqlParameter>();
+            var parameterCounter = 1;
+            foreach (var property in primeryKey)
+            {
+
+                var parameterName = "Column" + parameterCounter++;
+                wherePart.Add(property.ColumnName + "@" + parameterName);
+                var parameterValue = property.Propertyinfo.GetValue(entity);
+                sqlParameters.Add(new MySqlParameter(parameterName, parameterValue));
+            }
+
+            deleteStatment.Append(" WHERE " + string.Join(" AND ", wherePart));
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+                var cammand = connection.CreateCommand();
+                cammand.CommandText = deleteStatment.ToString();
+                foreach (var parameter in sqlParameters)
+                {
+                    cammand.Parameters.Add(parameter);
+                }
+
+                return cammand.ExecuteNonQuery();
+            }
+
+        }
+
+        public TEntity Find(params object[] keys)
+        {
+            var primeryKey = _propertyModels.Where(property => property.IsPrimeryKey);
+            var queryStatment = new StringBuilder("Select  TOP(1) * FROM " + schema + "." + tableName);
+            List<string> wherePart = new List<string>();
+            List<MySqlParameter> sqlParameters = new List<MySqlParameter>();
+            var parameterCounter = 1;
+            foreach (var property in primeryKey)
+            {
+                var parameterName = "Column" + parameterCounter;
+                wherePart.Add(property.ColumnName + "@" + parameterName);
+                var parameterValue = keys[parameterCounter++ - 1];
+                sqlParameters.Add(new MySqlParameter(parameterName, parameterValue));
+            }
+            queryStatment.Append(" WHERE " + string.Join(" AND ", wherePart));
+            return RunQuery(queryStatment.ToString(), sqlParameters.ToArray()).FirstOrDefault();
+        }
+
+        public List<TEntity> All()
+        {
+            var queryStatment = new StringBuilder("Select  TOP(1) * FROM " + schema + "." + tableName);
+            return RunQuery(queryStatment.ToString());
         }
 
         public int Update(TEntity entity)
         {
-            return 0;
+            var queryUpdate = new StringBuilder("UPDATE "+schema+"."+tableName);
+            var nonComputedColumn = _propertyModels.Where(p => !p.IsComputed);
+            var primeryKey = _propertyModels.Where(property => property.IsPrimeryKey);
+            List<string> updateStatment = new List<string>();
+            List<MySqlParameter> parameters = new List<MySqlParameter>();
+            var valuseCounter = 1;
+            foreach (var model in nonComputedColumn)
+            {
+                updateStatment.Add(model.ColumnName+"= @valuse"+valuseCounter);
+                parameters.Add(new MySqlParameter("valuse"+valuseCounter++,model.Propertyinfo.GetValue(entity)));
+
+            }
+
+            queryUpdate.Append(" SET " + string.Join(",", updateStatment));
+            List<string> wherePart = new List<string>();
+            var keyCounter = 1;
+            foreach (var property in primeryKey)
+            {
+
+                var parameterName = "Column" + keyCounter++;
+                wherePart.Add(property.ColumnName + "@" + parameterName);
+                var parameterValue = property.Propertyinfo.GetValue(entity);
+                parameters.Add(new MySqlParameter(parameterName, parameterValue));
+            }
+            queryUpdate.Append(" WHERE " + string.Join(" AND ", wherePart));
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+                var cammand = connection.CreateCommand();
+                cammand.CommandText = queryUpdate.ToString();
+                foreach (var parameter in parameters)
+                {
+                    cammand.Parameters.Add(parameter);
+                }
+
+                return cammand.ExecuteNonQuery();
+            }
+        }
+
+        private List<TEntity> RunQuery(string query, params MySqlParameter[] parameters)
+        {
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+                var cammand = connection.CreateCommand();
+                cammand.CommandText = query.ToString();
+                foreach (var parameter in parameters)
+                {
+                    cammand.Parameters.Add(parameter);
+                }
+
+                var reader = cammand.ExecuteReader();
+                List<TEntity> entities = new List<TEntity>();
+                while (reader.Read())
+                {
+                    TEntity entity = Activator.CreateInstance<TEntity>();
+                    foreach (var model in _propertyModels)
+                    {
+                        model.Propertyinfo.SetValue(entity, reader[model.ColumnName]);
+                    }
+
+                    entities.Add(entity);
+                }
+
+                return entities;
+            }
+
         }
     }
 }
