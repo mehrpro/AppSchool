@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AppSchool.Repository;
+using DevExpress.ReportServer.ServiceModel.DataContracts;
 using SchoolDataAccess;
 using DevExpress.XtraEditors;
 using MySql.Data;
@@ -30,13 +32,22 @@ namespace AppSchool
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            var student = new GenericRepository<Student>();
-            student.Add(new Student()
+            var conn = new MyDataClass();
+            var connString = conn.ConnectionString();
+            var studens = new GenericRepository<Student>(connString);
+            studens.Add(new Student()
             {
+                Name = "farshid",
+                BrithDate = DateTime.Now,
+                NatinalCode = 4545,
+                Family = "محمدی",
+                Code = 7455,
+                
                 
             });
 
-            
+
+
         }
     }
 }

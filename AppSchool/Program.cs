@@ -13,7 +13,8 @@ namespace AppSchool
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new AppSchool.UserForm.FrmMainPanel());
+            Application.Run(new frmLogin());
+
         }
     }
 }

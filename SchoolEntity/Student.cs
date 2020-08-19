@@ -3,7 +3,7 @@ using SchoolDataAccess;
 
 namespace SchoolEntity
 {
-    [Table("dbo","Student")]
+    [Table("appschool","Student")]
     public class Student
     {
         [PrimeryKey]
